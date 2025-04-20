@@ -24,14 +24,13 @@
             --current: var(--primary-light);
             --shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
             --border-radius: 12px;
-            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition: all 0.2s ease;
         }
 
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            transition: var(--transition);
         }
 
         body {
@@ -41,62 +40,52 @@
             min-height: 100vh;
             display: flex;
             flex-direction: column;
-            padding: 1rem;
-            line-height: 1.6;
+            padding: 20px;
+            line-height: 1.5;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            width: 100%;
+            flex: 1;
         }
 
         header {
             text-align: center;
-            margin-bottom: 2rem;
-            position: relative;
+            margin-bottom: 30px;
         }
 
         h1 {
-            font-size: clamp(2rem, 5vw, 3rem);
+            font-size: 2.2rem;
             font-weight: 700;
-            margin-bottom: 0.5rem;
-            background: linear-gradient(90deg, var(--primary), var(--secondary));
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            letter-spacing: -0.5px;
+            margin-bottom: 10px;
+            color: var(--primary);
         }
 
         .subtitle {
-            font-size: clamp(1rem, 3vw, 1.2rem);
+            font-size: 1.1rem;
             color: var(--text-secondary);
-            font-weight: 400;
-            max-width: 600px;
-            margin: 0 auto;
-        }
-
-        .container {
-            max-width: 900px;
-            margin: 0 auto;
-            width: 100%;
-            flex: 1;
-            display: flex;
-            flex-direction: column;
+            margin-bottom: 20px;
         }
 
         .card {
             background-color: var(--surface);
             border-radius: var(--border-radius);
-            padding: 2rem;
+            padding: 25px;
+            margin-bottom: 20px;
             box-shadow: var(--shadow);
-            margin-bottom: 1.5rem;
-            border: 1px solid rgba(255, 255, 255, 0.05);
         }
 
         .dictionary-selector {
             display: flex;
             flex-wrap: wrap;
-            gap: 0.75rem;
-            margin-bottom: 1.5rem;
+            gap: 10px;
+            margin-bottom: 20px;
         }
 
         .dictionary-btn {
-            padding: 0.75rem 1.25rem;
+            padding: 10px 15px;
             border-radius: 8px;
             border: none;
             background-color: var(--surface-light);
@@ -104,152 +93,120 @@
             font-family: inherit;
             font-weight: 500;
             cursor: pointer;
-            font-size: 0.95rem;
             transition: var(--transition);
         }
 
         .dictionary-btn:hover {
             background-color: var(--primary-dark);
-            transform: translateY(-2px);
         }
 
         .dictionary-btn.active {
             background-color: var(--primary);
             color: white;
-            box-shadow: 0 4px 16px rgba(124, 77, 255, 0.3);
-        }
-
-        .typing-area {
-            margin-bottom: 1.5rem;
         }
 
         .timer {
-            font-size: 1.5rem;
+            font-size: 1.8rem;
             font-weight: 600;
             color: var(--primary);
-            margin-bottom: 1.5rem;
+            margin-bottom: 20px;
             text-align: center;
-            font-feature-settings: "tnum";
         }
 
         .text-display {
             font-family: 'JetBrains Mono', monospace;
-            font-size: 1.5rem;
-            line-height: 2.25rem;
-            margin-bottom: 2rem;
-            min-height: 9rem;
-            padding: 1.5rem;
+            font-size: 1.4rem;
+            line-height: 2;
+            margin-bottom: 20px;
+            padding: 15px;
             background-color: var(--surface-light);
             border-radius: var(--border-radius);
-            white-space: pre-wrap;
-            word-wrap: break-word;
-            overflow-wrap: break-word;
-            overflow-y: auto;
+            min-height: 120px;
             max-height: 250px;
-            border: 1px solid rgba(255, 255, 255, 0.05);
+            overflow-y: auto;
         }
 
         .input-container {
+            margin-bottom: 20px;
             position: relative;
-            margin-bottom: 1.5rem;
         }
 
         .input-area {
             width: 100%;
-            padding: 1.25rem;
+            padding: 15px;
             font-family: 'JetBrains Mono', monospace;
-            font-size: 1.25rem;
+            font-size: 1.2rem;
             border: 2px solid var(--surface-light);
             border-radius: var(--border-radius);
-            outline: none;
             background-color: var(--surface-light);
             color: var(--text-primary);
-            caret-color: var(--primary);
+            outline: none;
+            transition: var(--transition);
         }
 
         .input-area:focus {
             border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(124, 77, 255, 0.2);
         }
 
-        .input-hint {
-            position: absolute;
-            right: 1rem;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-            pointer-events: none;
+        .controls {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
         }
 
         .btn {
-            padding: 1rem 2rem;
-            background-color: var(--primary);
-            color: white;
+            padding: 12px 20px;
             border: none;
             border-radius: var(--border-radius);
             font-family: inherit;
             font-weight: 600;
             cursor: pointer;
-            font-size: 1rem;
-            box-shadow: 0 4px 16px rgba(124, 77, 255, 0.3);
             transition: var(--transition);
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
+            flex: 1;
         }
 
-        .btn:hover {
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
             background-color: var(--primary-light);
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(124, 77, 255, 0.4);
         }
 
-        .btn:active {
-            transform: translateY(0);
+        .btn-secondary {
+            background-color: var(--surface-light);
+            color: var(--text-primary);
         }
 
-        .btn-outline {
-            background-color: transparent;
-            border: 2px solid var(--primary);
-            color: var(--primary);
-            box-shadow: none;
-        }
-
-        .btn-outline:hover {
-            background-color: rgba(124, 77, 255, 0.1);
+        .btn-secondary:hover {
+            background-color: #333;
         }
 
         .stats {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 1rem;
-            margin-bottom: 2rem;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
         }
 
         .stat-box {
             background-color: var(--surface-light);
             border-radius: var(--border-radius);
-            padding: 1.5rem;
+            padding: 15px;
             text-align: center;
-            border: 1px solid rgba(255, 255, 255, 0.05);
         }
 
         .stat-value {
-            font-size: 2.5rem;
+            font-size: 1.8rem;
             font-weight: 700;
             color: var(--primary);
-            margin-bottom: 0.25rem;
-            font-feature-settings: "tnum";
+            margin-bottom: 5px;
         }
 
         .stat-label {
             font-size: 0.9rem;
             color: var(--text-secondary);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            font-weight: 500;
         }
 
         .hidden {
@@ -258,7 +215,6 @@
 
         .character {
             position: relative;
-            transition: color 0.1s ease;
         }
 
         .character.correct {
@@ -267,120 +223,74 @@
 
         .character.incorrect {
             color: var(--incorrect);
-            text-decoration: underline wavy var(--incorrect);
+            text-decoration: underline;
         }
 
         .character.missed {
             color: var(--missed);
-            text-decoration: underline dotted var(--missed);
+            text-decoration: underline dotted;
         }
 
         .character.current {
-            background-color: rgba(124, 77, 255, 0.15);
-            border-radius: 4px;
+            background-color: rgba(124, 77, 255, 0.2);
+            border-radius: 3px;
         }
 
         .character.current::after {
             content: '';
             position: absolute;
             left: 0;
-            bottom: -4px;
+            bottom: -2px;
             width: 100%;
-            height: 3px;
+            height: 2px;
             background-color: var(--current);
-            animation: blink 1.2s infinite;
-            border-radius: 2px;
+            animation: blink 1s infinite;
         }
 
         @keyframes blink {
             0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
-        }
-
-        .actions {
-            display: flex;
-            gap: 1rem;
-            justify-content: center;
-            flex-wrap: wrap;
+            50% { opacity: 0.3; }
         }
 
         footer {
             text-align: center;
-            margin-top: 3rem;
+            margin-top: 30px;
             color: var(--text-secondary);
             font-size: 0.9rem;
-            padding: 1rem;
         }
 
         @media (max-width: 768px) {
-            .card {
-                padding: 1.5rem;
+            body {
+                padding: 15px;
+            }
+            
+            h1 {
+                font-size: 1.8rem;
             }
             
             .text-display {
-                font-size: 1.25rem;
-                line-height: 2rem;
-                padding: 1rem;
-                min-height: 7rem;
+                font-size: 1.2rem;
+                min-height: 100px;
                 max-height: 200px;
             }
             
-            .input-area {
-                padding: 1rem;
-                font-size: 1.1rem;
-            }
-            
-            .btn {
-                padding: 0.9rem 1.5rem;
-                width: 100%;
-            }
-            
-            .actions {
-                flex-direction: column;
-                gap: 0.75rem;
-            }
-            
-            .stat-box {
-                padding: 1rem;
-            }
-            
-            .stat-value {
-                font-size: 2rem;
+            .stats {
+                grid-template-columns: 1fr;
             }
         }
 
         @media (max-width: 480px) {
-            .card {
-                padding: 1.25rem;
-            }
-            
             .dictionary-selector {
-                gap: 0.5rem;
-            }
-            
-            .dictionary-btn {
-                padding: 0.6rem 1rem;
-                font-size: 0.85rem;
+                flex-direction: column;
             }
             
             .text-display {
                 font-size: 1.1rem;
-                line-height: 1.8rem;
-                min-height: 6rem;
-                max-height: 180px;
+                line-height: 1.8;
             }
             
-            .input-area {
-                padding: 0.9rem;
-                font-size: 1rem;
-            }
-            
-            .stat-box {
-                padding: 0.8rem;
-            }
-            
-            .stat-value {
-                font-size: 1.5rem;
+            .controls {
+                flex-direction: column;
             }
         }
     </style>
@@ -389,7 +299,7 @@
     <div class="container">
         <header>
             <h1>TypeMaster</h1>
-            <p class="subtitle">Совершенствуйте навыки печати с красивым и удобным тренажером</p>
+            <p class="subtitle">Тренажер для улучшения скорости и точности печати</p>
         </header>
 
         <div class="card">
@@ -402,13 +312,8 @@
             </div>
         </div>
 
-        <div class="card typing-area">
-            <button class="btn" id="startBtn">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M8 5V19L19 12L8 5Z" fill="currentColor"/>
-                </svg>
-                Начать тест
-            </button>
+        <div class="card">
+            <button class="btn btn-primary" id="startBtn">Начать тест</button>
             
             <div class="timer hidden" id="timer">60</div>
             
@@ -416,7 +321,6 @@
             
             <div class="input-container hidden" id="inputContainer">
                 <input type="text" class="input-area" id="typingInput" placeholder="Начните печатать..." autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
-                <div class="input-hint" id="inputHint">Пробел - пропуск</div>
             </div>
             
             <div class="stats hidden" id="statsArea">
@@ -436,25 +340,11 @@
                     <div class="stat-value" id="incorrectStat">0</div>
                     <div class="stat-label">Ошибки</div>
                 </div>
-                <div class="stat-box">
-                    <div class="stat-value" id="missedStat">0</div>
-                    <div class="stat-label">Пропущено</div>
-                </div>
             </div>
             
-            <div class="actions hidden" id="actionsArea">
-                <button class="btn" id="restartBtn">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M12 5V2L8 6L12 10V7C15.31 7 18 9.69 18 13C18 16.31 15.31 19 12 19C8.69 19 6 16.31 6 13H4C4 17.42 7.58 21 12 21C16.42 21 20 17.42 20 13C20 8.58 16.42 5 12 5Z" fill="currentColor"/>
-                    </svg>
-                    Попробовать снова
-                </button>
-                <button class="btn btn-outline" id="changeDictBtn">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M3 17V19H9V17H3ZM3 5V7H13V5H3ZM13 21V19H21V17H13V15H11V21H13ZM7 9V11H3V13H7V15H9V9H7ZM21 13V11H11V13H21ZM15 9H17V7H21V5H17V3H15V9Z" fill="currentColor"/>
-                    </svg>
-                    Сменить словарь
-                </button>
+            <div class="controls hidden" id="controlsArea">
+                <button class="btn btn-primary" id="restartBtn">Повторить</button>
+                <button class="btn btn-secondary" id="changeDictBtn">Сменить словарь</button>
             </div>
         </div>
     </div>
@@ -468,25 +358,18 @@
             russian: [
                 "привет", "мир", "программа", "язык", "компьютер", "клавиатура", "монитор", "мышь", "система", "файл",
                 "папка", "документ", "текст", "страница", "строка", "слово", "буква", "цифра", "число", "код",
-                "алгоритм", "программист", "разработчик", "интерфейс", "функция", "переменная", "значение", "оператор", "условие", "цикл",
-                "массив", "объект", "класс", "метод", "параметр", "аргумент", "возврат", "константа", "строка", "логический"
+                "алгоритм", "программист", "разработчик", "интерфейс", "функция", "переменная", "значение", "оператор", "условие", "цикл"
             ],
             russian_proverbs: [
                 "Без труда не вытащишь и рыбку из пруда",
                 "В гостях хорошо а дома лучше",
                 "Волков бояться в лес не ходить",
                 "Глаза боятся а руки делают",
-                "Дело мастера боится",
-                "За двумя зайцами погонишься ни одного не поймаешь",
-                "Копейка рубль бережет",
-                "Кто рано встает тому бог подает",
-                "Любишь кататься люби и саночки возить",
-                "Москва не сразу строилась"
+                "Дело мастера боится"
             ],
             programming: [
                 "функция", "переменная", "цикл", "массив", "объект", "класс", "метод", "параметр", "аргумент", "возврат",
-                "константа", "условие", "оператор", "логический", "строка", "число", "булевый", "истина", "ложь", "тип",
-                "интерфейс", "модуль", "импорт", "экспорт", "библиотека", "фреймворк", "компилятор", "интерпретатор", "синтаксис", "отладка"
+                "константа", "условие", "оператор", "логический", "строка", "число", "булевый", "истина", "ложь", "тип"
             ],
             quotes: [
                 "Лучший способ предсказать будущее создать его",
@@ -501,10 +384,9 @@
         const typingInput = document.getElementById('typingInput');
         const timerElement = document.getElementById('timer');
         const inputContainer = document.getElementById('inputContainer');
-        const inputHint = document.getElementById('inputHint');
         const dictionaryBtns = document.querySelectorAll('.dictionary-btn');
         const statsArea = document.getElementById('statsArea');
-        const actionsArea = document.getElementById('actionsArea');
+        const controlsArea = document.getElementById('controlsArea');
         const restartBtn = document.getElementById('restartBtn');
         const changeDictBtn = document.getElementById('changeDictBtn');
         const startBtn = document.getElementById('startBtn');
@@ -512,7 +394,6 @@
         const accuracyStat = document.getElementById('accuracyStat');
         const correctStat = document.getElementById('correctStat');
         const incorrectStat = document.getElementById('incorrectStat');
-        const missedStat = document.getElementById('missedStat');
 
         let currentDictionary = 'russian';
         let text = '';
@@ -522,7 +403,6 @@
         let timeLeft = 60;
         let correctCharacters = 0;
         let incorrectCharacters = 0;
-        let missedCharacters = 0;
         let isTyping = false;
         let characterStates = [];
         let backspacePressed = false;
@@ -532,7 +412,6 @@
             timeLeft = 60;
             correctCharacters = 0;
             incorrectCharacters = 0;
-            missedCharacters = 0;
             isTyping = false;
             characterStates = [];
             backspacePressed = false;
@@ -551,7 +430,7 @@
             textDisplay.classList.add('hidden');
             inputContainer.classList.add('hidden');
             statsArea.classList.add('hidden');
-            actionsArea.classList.add('hidden');
+            controlsArea.classList.add('hidden');
             
             if (timer) {
                 clearInterval(timer);
@@ -564,7 +443,7 @@
             }
             
             const shuffled = [...dictionary].sort(() => 0.5 - Math.random());
-            const words = shuffled.slice(0, 30);
+            const words = shuffled.slice(0, 25);
             return words.join(' ');
         }
 
@@ -601,8 +480,6 @@
                     characterClass = 'correct';
                 } else if (characterStates[i] === 'incorrect') {
                     characterClass = 'incorrect';
-                } else if (characterStates[i] === 'missed') {
-                    characterClass = 'missed';
                 } else if (i === currentCharacterIndex) {
                     characterClass = 'current';
                 }
@@ -627,17 +504,7 @@
             typingInput.disabled = true;
             isTyping = false;
             
-            for (let i = currentCharacterIndex; i < text.length; i++) {
-                if (characterStates[i] === null) {
-                    characterStates[i] = 'missed';
-                    missedCharacters++;
-                }
-            }
-            
-            renderText();
-            
             const totalTyped = correctCharacters + incorrectCharacters;
-            const totalCharacters = correctCharacters + incorrectCharacters + missedCharacters;
             const minutes = (60 - timeLeft) / 60;
             const wpm = Math.round((correctCharacters / 5) / minutes) || 0;
             const accuracy = totalTyped > 0 ? Math.round((correctCharacters / totalTyped) * 100) : 0;
@@ -646,10 +513,9 @@
             accuracyStat.textContent = accuracy;
             correctStat.textContent = correctCharacters;
             incorrectStat.textContent = incorrectCharacters;
-            missedStat.textContent = missedCharacters;
             
             statsArea.classList.remove('hidden');
-            actionsArea.classList.remove('hidden');
+            controlsArea.classList.remove('hidden');
         }
 
         function handleInput(e) {
@@ -694,11 +560,15 @@
         }
 
         function handleKeyDown(e) {
-            if (e.key === ' ' && isTyping) {
+            if (e.key === 'Backspace') {
+                backspacePressed = true;
+            }
+            
+            if (e.key === ' ') {
                 e.preventDefault();
                 if (characterStates[currentCharacterIndex] === null) {
-                    characterStates[currentCharacterIndex] = 'missed';
-                    missedCharacters++;
+                    characterStates[currentCharacterIndex] = 'incorrect';
+                    incorrectCharacters++;
                 }
                 currentCharacterIndex++;
                 typingInput.value = '';
@@ -709,15 +579,6 @@
                 }
                 
                 renderText();
-            }
-            
-            if (e.key === 'Backspace') {
-                backspacePressed = true;
-            }
-            
-            if (e.key === 'Tab') {
-                e.preventDefault();
-                init();
             }
         }
 
