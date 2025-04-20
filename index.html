@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TypeMaster - Проверка скорости печати</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* Light theme */
+            --primary: #6c5ce7;
+            --primary-dark: #5649c0;
+            --secondary: #00cec9;
+            --background: #f8f9fa;
+            --text: #2d3436;
+            --text-light: #636e72;
+            --correct: #00b894;
+            --incorrect: #d63031;
+            --current: var(--primary);
+            --card-bg: #ffffff;
+            --shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            --input-bg: #f8f9fa;
+            --input-border: #dfe6e9;
+        }
+
+        /* Dark theme */
+        [data-theme="dark"] {
+            --primary: #6c5ce7;
+            --primary-dark: #7d6eff;
+            --secondary: #00cec9;
+            --background: #1a1a2e;
+            --text: #e6e6e6;
+            --text-light: #b8b8b8;
+            --correct: #00b894;
+            --incorrect: #ff7675;
+            --current: var(--primary);
+            --card-bg: #16213e;
+            --shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            --input-bg: #1a1a2e;
+            --input-border: #2d4059;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--background);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            padding: 1rem;
+            line-height: 1.6;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+
+        h1 {
+            font-size: clamp(1.8rem, 5vw, 2.5rem);
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .subtitle {
+            font-size: clamp(0.9rem, 3vw, 1.1rem);
+            color: var(--text-light);
+            font-weight: 400;
+        }
+
+        .theme-toggle {
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: none;
+            border: none;
+            color: var(--text);
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            width: 100%;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+            margin-bottom: 1.25rem;
+        }
+
+        .dictionary-selector {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1.25rem;
+        }
+
+        .dictionary-btn {
+            padding: 0.5rem 0.8rem;
+            border-radius: 6px;
+            border: none;
+            background-color: var(--input-bg);
+            color: var(--text);
+            font-family: inherit;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: clamp(0.8rem, 3vw, 1rem);
+        }
+
+        .dictionary-btn:hover {
+            background-color: var(--input-border);
+        }
+
+        .dictionary-btn.active {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .typing-area {
+            margin-bottom: 1.25rem;
+        }
+
+        .timer {
+            font-size: clamp(1rem, 4vw, 1.2rem);
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .text-display {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: clamp(1rem, 4vw, 1.4rem);
+            line-height: 1.8;
+            margin-bottom: 1.5rem;
+            min-height: 6rem;
+            padding: 1rem;
+            background-color: var(--input-bg);
+            border-radius: 8px;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            overflow-y: auto;
+            max-height: 200px;
+        }
+
+        .input-area {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: clamp(1rem, 4vw, 1.2rem);
+            border: 2px solid var(--input-border);
+            border-radius: 8px;
+            outline: none;
+            transition: border-color 0.2s ease;
+            margin-bottom: 1rem;
+            background-color: var(--input-bg);
+            color: var(--text);
+        }
+
+        .input-area:focus {
+            border-color: var(--primary);
+        }
+
+        .start-btn {
+            padding: 0.7rem 1.3rem;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-family: inherit;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+            align-self: center;
+            margin-bottom: 1rem;
+            font-size: clamp(0.9rem, 4vw, 1rem);
+            width: 100%;
+            max-width: 200px;
+        }
+
+        .start-btn:hover {
+            background-color: var(--primary-dark);
+        }
+
+        .stats {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            gap: 0.8rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .stat-box {
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            padding: 0.8rem;
+            text-align: center;
+            flex: 1 1 calc(50% - 0.8rem);
+            min-width: 120px;
+            box-shadow: var(--shadow);
+        }
+
+        .stat-value {
+            font-size: clamp(1.5rem, 6vw, 2rem);
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .stat-label {
+            font-size: clamp(0.8rem, 3vw, 0.9rem);
+            color: var(--text-light);
+        }
+
+        .restart-btn {
+            padding: 0.7rem 1.3rem;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-family: inherit;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+            align-self: center;
+            font-size: clamp(0.9rem, 4vw, 1rem);
+            width: 100%;
+            max-width: 200px;
+        }
+
+        .restart-btn:hover {
+            background-color: var(--primary-dark);
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .character {
+            position: relative;
+        }
+
+        .character.correct {
+            color: var(--correct);
+        }
+
+        .character.incorrect {
+            color: var(--incorrect);
+        }
+
+        .character.current {
+            background-color: rgba(108, 92, 231, 0.1);
+            border-radius: 2px;
+        }
+
+        .character.current::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: -2px;
+            width: 100%;
+            height: 2px;
+            background-color: var(--current);
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 1.5rem;
+            color: var(--text-light);
+            font-size: clamp(0.8rem, 3vw, 0.9rem);
+        }
+
+        @media (max-width: 480px) {
+            .card {
+                padding: 1rem;
+            }
+            
+            .dictionary-selector {
+                gap: 0.4rem;
+            }
+            
+            .dictionary-btn {
+                padding: 0.4rem 0.6rem;
+            }
+            
+            .text-display {
+                padding: 0.8rem;
+                font-size: 1rem;
+                line-height: 1.6;
+                min-height: 5rem;
+                max-height: 150px;
+            }
+            
+            .input-area {
+                padding: 0.7rem;
+            }
+            
+            .stat-box {
+                flex: 1 1 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <button class="theme-toggle" id="themeToggle">🌓</button>
+            <h1>TypeMaster</h1>
+            <p class="subtitle">кирюх ты кста первый тестер</p>
+        </header>
+
+        <div class="card">
+            <h2>Выберите словарь</h2>
+            <div class="dictionary-selector">
+                <button class="dictionary-btn active" data-dictionary="russian">Русские слова</button>
+                <button class="dictionary-btn" data-dictionary="russian_proverbs">Пословицы</button>
+                <button class="dictionary-btn" data-dictionary="programming">Программирование</button>
+                <button class="dictionary-btn" data-dictionary="quotes">Цитаты</button>
+            </div>
+        </div>
+
+        <div class="card typing-area">
+            <button class="start-btn" id="startBtn">Начать тест</button>
+            <div class="timer hidden" id="timer">60</div>
+            <div class="text-display hidden" id="textDisplay"></div>
+            <input type="text" class="input-area hidden" id="typingInput" placeholder="Начните печатать здесь..." autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+            <div class="stats hidden" id="statsArea">
+                <div class="stat-box">
+                    <div class="stat-value" id="wpmStat">0</div>
+                    <div class="stat-label">WPM</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value" id="accuracyStat">0</div>
+                    <div class="stat-label">Точность</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value" id="correctStat">0</div>
+                    <div class="stat-label">Правильно</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value" id="incorrectStat">0</div>
+                    <div class="stat-label">Ошибки</div>
+                </div>
+            </div>
+            <button class="restart-btn hidden" id="restartBtn">Попробовать снова</button>
+        </div>
+    </div>
+
+    <footer>
+        <p></p>
+    </footer>
+
+    <script>
+        // Русс��ие словари
+        const dictionaries = {
+            russian: [
+                "привет", "мир", "программа", "язык", "компьютер", "клавиатура", "монитор", "мышь", "система", "файл",
+                "папка", "документ", "текст", "страница", "строка", "слово", "буква", "цифра", "число", "код",
+                "алгоритм", "программист", "разработчик", "интерфейс", "функция", "переменная", "значение", "оператор", "условие", "цикл",
+                "массив", "объект", "класс", "метод", "параметр", "аргумент", "возврат", "константа", "строка", "логический",
+                "истина", "ложь", "тип", "пример", "синтаксис", "ошибка", "отладка", "тестирование", "версия", "проект",
+                "репозиторий", "коммит", "ветка", "слияние", "конфликт", "сервер", "клиент", "база", "данные", "запрос",
+                "ответ", "статус", "заголовок", "содержимое", "формат", "структура", "модель", "вид", "контро��лер", "маршрут",
+                "аутентификация", "авторизация", "сессия", "куки", "токен", "безопасность", "шифрование", "хэш", "пароль", "логин",
+                "регистрация", "профиль", "настройки", "сообщение", "уведомление", "поиск", "фильтр", "сортировка", "пагинация", "загрузка",
+                "выгрузка", "экспорт", "импорт", "отчет", "статистика", "график", "диаграмма", "аналитика", "оптимизация", "производительность"
+            ],
+            russian_proverbs: [
+                "Без труда не вытащишь и рыбку из пруда",
+                "В гостях хорошо а дома лучше",
+                "Волков бояться в лес не ходить",
+                "Глаза боятся а руки делают",
+                "Дело мастера боится",
+                "За двумя зайцами погонишься ни одного не поймаешь",
+                "Копейка рубль бережет",
+                "Кто рано встает тому бог подает",
+                "Любишь кататься люби и саночки возить",
+                "Москва не сразу строилась",
+                "Не зная броду не суйся в воду",
+                "Не откладывай на завтра то что можно сделать сегодня",
+                "Один в поле не воин",
+                "Повторение мать учения",
+                "Семь раз отмерь один раз отрежь",
+                "Слово не воробей вылетит не поймаешь",
+                "Тише едешь дальше будешь",
+                "Ученье свет а неученье тьма",
+                "Что посеешь то и пожнешь",
+                "Язык до Киева доведет"
+            ],
+            programming: [
+                "функция", "переменная", "цикл", "массив", "объект", "класс", "метод", "параметр", "аргумент", "возврат",
+                "константа", "условие", "оператор", "логический", "стр��ка", "число", "булевый", "истина", "ложь", "тип",
+                "интерфейс", "модуль", "импорт", "экспорт", "библиотека", "фреймворк", "компилятор", "интерпретатор", "синтаксис", "отладка",
+                "тестирование", "рефакторинг", "оптимизация", "алгоритм", "структура", "данные", "база", "запрос", "ответ", "сервер",
+                "клиент", "асинхронный", "промис", "колбэк", "замыкание", "прототип", "наследование", "инкапсуляция", "полиморфизм", "абстракция",
+                "рекурсия", "итерация", "декремент", "инкремент", "конкатенация", "интерполяция", "валидация", "санитизация", "хэширование", "шифрование",
+                "аутентификация", "авторизация", "сессия", "куки", "токен", "мидлвар", "роутер", "редирект", "деплой", "релиз"
+            ],
+            quotes: [
+                "Лучший способ предсказать будущее создать его",
+                "Программирование это искусство создавать решения из ничего",
+                "Код это поэзия логики",
+                "Прежде чем оптимизировать убедитесь что это необходимо",
+                "Сложность убивает она высасывает жизнь из разработчиков",
+                "Лучше сделать потом чем никогда не сделать",
+                "Работает не трогай",
+                "Измеряй дважды режь один раз",
+                "Главное не знать а понимать",
+                "Учись как будто будешь жить вечно"
+            ]
+        };
+
+        // DOM Elements
+        const textDisplay = document.getElementById('textDisplay');
+        const typingInput = document.getElementById('typingInput');
+        const timerElement = document.getElementById('timer');
+        const dictionaryBtns = document.querySelectorAll('.dictionary-btn');
+        const statsArea = document.getElementById('statsArea');
+        const restartBtn = document.getElementById('restartBtn');
+        const startBtn = document.getElementById('startBtn');
+        const wpmStat = document.getElementById('wpmStat');
+        const accuracyStat = document.getElementById('accuracyStat');
+        const correctStat = document.getElementById('correctStat');
+        const incorrectStat = document.getElementById('incorrectStat');
+        const themeToggle = document.getElementById('themeToggle');
+
+        // Game variables
+        let currentDictionary = 'russian';
+        let text = '';
+        let currentCharacterIndex = 0;
+        let startTime;
+        let timer;
+        let timeLeft = 60;
+        let correctCharacters = 0;
+        let incorrectCharacters = 0;
+        let isTyping = false;
+
+        // Initialize the game
+        function init() {
+            // Reset game state
+            currentCharacterIndex = 0;
+            timeLeft = 60;
+            correctCharacters = 0;
+            incorrectCharacters = 0;
+            isTyping = false;
+            
+            // Get text from selected dictionary
+            text = getTextFromDictionary(dictionaries[currentDictionary]);
+            
+            // Display text
+            renderText();
+            
+            // Reset UI
+            typingInput.value = '';
+            typingInput.disabled = false;
+            timerElement.textContent = timeLeft;
+            
+            // Hide/show elements
+            startBtn.classList.remove('hidden');
+            timerElement.classList.add('hidden');
+            textDisplay.classList.add('hidden');
+            typingInput.classList.add('hidden');
+            statsArea.classList.add('hidden');
+            restartBtn.classList.add('hidden');
+            
+            // Clear any existing timer
+            if (timer) {
+                clearInterval(timer);
+            }
+        }
+
+        // Get text from dictionary
+        function getTextFromDictionary(dictionary) {
+            // For proverbs and quotes, use them as is
+            if (currentDictionary === 'russian_proverbs' || currentDictionary === 'quotes') {
+                return dictionary.join(' ');
+            }
+            
+            // For word lists, create a random text
+            const shuffled = [...dictionary].sort(() => 0.5 - Math.random());
+            const words = shuffled.slice(0, 50);
+            return words.join(' ');
+        }
+
+        // Start the typing test
+        function startTest() {
+            if (isTyping) return;
+            
+            isTyping = true;
+            startTime = new Date().getTime();
+            
+            // Show typing area
+            timerElement.classList.remove('hidden');
+            textDisplay.classList.remove('hidden');
+            typingInput.classList.remove('hidden');
+            startBtn.classList.add('hidden');
+            
+            // Focus input
+            typingInput.focus();
+            
+            // Start timer
+            timer = setInterval(() => {
+                timeLeft--;
+                timerElement.textContent = timeLeft;
+                
+                if (timeLeft <= 0) {
+                    endTest();
+                }
+            }, 1000);
+        }
+
+        // Render text with character highlighting
+        function renderText() {
+            let html = '';
+            
+            for (let i = 0; i < text.length; i++) {
+                let characterClass = '';
+                
+                if (i < currentCharacterIndex) {
+                    // Character is already typed
+                    characterClass = 'correct';
+                } else if (i === currentCharacterIndex) {
+                    // Current character
+                    characterClass = 'current';
+                }
+                
+                html += `<span class="character ${characterClass}">${text[i]}</span>`;
+            }
+            
+            textDisplay.innerHTML = html;
+            
+            // Auto-scroll to current character on mobile
+            const currentCharElement = document.querySelector('.character.current');
+            if (currentCharElement) {
+                currentCharElement.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'center',
+                    inline: 'center'
+                });
+            }
+        }
+
+        // End the typing test
+        function endTest() {
+            clearInterval(timer);
+            typingInput.disabled = true;
+            isTyping = false;
+            
+            // Calculate stats
+            const totalCharacters = correctCharacters + incorrectCharacters;
+            const minutes = (60 - timeLeft) / 60;
+            const wpm = Math.round((correctCharacters / 5) / minutes) || 0;
+            const accuracy = Math.round((correctCharacters / totalCharacters) * 100) || 0;
+            
+            // Display stats
+            wpmStat.textContent = wpm;
+            accuracyStat.textContent = accuracy + '%';
+            correctStat.textContent = correctCharacters;
+            incorrectStat.textContent = incorrectCharacters;
+            
+            statsArea.classList.remove('hidden');
+            restartBtn.classList.remove('hidden');
+        }
+
+        // Handle typing input
+        function handleInput(e) {
+            const inputValue = typingInput.value;
+            
+            if (inputValue.length === 0) return;
+            
+            const currentChar = text[currentCharacterIndex];
+            
+            // Check if current character matches input
+            if (inputValue === currentChar) {
+                correctCharacters++;
+                currentCharacterIndex++;
+                typingInput.value = '';
+                
+                // End test if all characters are completed
+                if (currentCharacterIndex === text.length) {
+                    endTest();
+                    return;
+                }
+            } else {
+                incorrectCharacters++;
+                typingInput.value = '';
+            }
+            
+            renderText();
+        }
+
+        // Toggle theme
+        function toggleTheme() {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            if (currentTheme === 'dark') {
+                document.documentElement.removeAttribute('data-theme');
+                localStorage.setItem('theme', 'light');
+                themeToggle.textContent = '🌙';
+            } else {
+                document.documentElement.setAttribute('data-theme', 'dark');
+                localStorage.setItem('theme', 'dark');
+                themeToggle.textContent = '☀️';
+            }
+        }
+
+        // Check for saved theme preference
+        function checkSavedTheme() {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark') {
+                document.documentElement.setAttribute('data-theme', 'dark');
+                themeToggle.textContent = '☀️';
+            } else {
+                themeToggle.textContent = '🌙';
+            }
+        }
+
+        // Event listeners
+        typingInput.addEventListener('input', handleInput);
+        
+        dictionaryBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                dictionaryBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                currentDictionary = btn.dataset.dictionary;
+                init();
+            });
+        });
+        
+        startBtn.addEventListener('click', startTest);
+        restartBtn.addEventListener('click', init);
+        themeToggle.addEventListener('click', toggleTheme);
+
+        // Initialize on load
+        checkSavedTheme();
+        init();
+    </script>
+</body>
+</html>
