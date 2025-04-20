@@ -3,13 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>клон манкитайпа666 сука</title>
+    <title>TypeMaster - Проверка скорости печати</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            /* Light theme */
             --primary: #6c5ce7;
             --primary-dark: #5649c0;
             --secondary: #00cec9;
@@ -23,9 +22,9 @@
             --shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
             --input-bg: #f8f9fa;
             --input-border: #dfe6e9;
+            --missed: #ff7675;
         }
 
-        /* Dark theme */
         [data-theme="dark"] {
             --primary: #6c5ce7;
             --primary-dark: #7d6eff;
@@ -40,6 +39,7 @@
             --shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
             --input-bg: #1a1a2e;
             --input-border: #2d4059;
+            --missed: #ff7675;
         }
 
         * {
@@ -270,6 +270,12 @@
 
         .character.incorrect {
             color: var(--incorrect);
+            text-decoration: underline wavy var(--incorrect);
+        }
+
+        .character.missed {
+            color: var(--missed);
+            text-decoration: underline dotted var(--missed);
         }
 
         .character.current {
@@ -335,8 +341,8 @@
     <div class="container">
         <header>
             <button class="theme-toggle" id="themeToggle">🌓</button>
-            <h1>Tипо Monkeytype</h1>
-            <p class="subtitle">выеби клавиатуру</p>
+            <h1>TypeMaster</h1>
+            <p class="subtitle">Проверьте свою скорость печати с разными словарями</p>
         </header>
 
         <div class="card">
@@ -371,29 +377,26 @@
                     <div class="stat-value" id="incorrectStat">0</div>
                     <div class="stat-label">Ошибки</div>
                 </div>
+                <div class="stat-box">
+                    <div class="stat-value" id="missedStat">0</div>
+                    <div class="stat-label">Пропущено</div>
+                </div>
             </div>
             <button class="restart-btn hidden" id="restartBtn">Попробовать снова</button>
         </div>
     </div>
 
     <footer>
-        <p></p>
+        <p>TypeMaster - Проверьте и улучшите свою скорость печати</p>
     </footer>
 
     <script>
-        // Русс��ие словари
         const dictionaries = {
             russian: [
                 "привет", "мир", "программа", "язык", "компьютер", "клавиатура", "монитор", "мышь", "система", "файл",
                 "папка", "документ", "текст", "страница", "строка", "слово", "буква", "цифра", "число", "код",
                 "алгоритм", "программист", "разработчик", "интерфейс", "функция", "переменная", "значение", "оператор", "условие", "цикл",
-                "массив", "объект", "класс", "метод", "параметр", "аргумент", "возврат", "константа", "строка", "логический",
-                "истина", "ложь", "тип", "пример", "синтаксис", "ошибка", "отладка", "тестирование", "версия", "проект",
-                "репозиторий", "коммит", "ветка", "слияние", "конфликт", "сервер", "клиент", "база", "данные", "запрос",
-                "ответ", "статус", "заголовок", "содержимое", "формат", "структура", "модель", "вид", "контро��лер", "маршрут",
-                "аутентификация", "авторизация", "сессия", "куки", "токен", "безопасность", "шифрование", "хэш", "пароль", "логин",
-                "регистрация", "профиль", "настройки", "сообщение", "уведомление", "поиск", "фильтр", "сортировка", "пагинация", "загрузка",
-                "выгрузка", "экспорт", "импорт", "отчет", "статистика", "график", "диаграмма", "аналитика", "оптимизация", "производительность"
+                "массив", "объект", "класс", "метод", "параметр", "аргумент", "возврат", "константа", "строка", "логический"
             ],
             russian_proverbs: [
                 "Без труда не вытащишь и рыбку из пруда",
@@ -405,42 +408,22 @@
                 "Копейка рубль бережет",
                 "Кто рано встает тому бог подает",
                 "Любишь кататься люби и саночки возить",
-                "Москва не сразу строилась",
-                "Не зная броду не суйся в воду",
-                "Не откладывай на завтра то что можно сделать сегодня",
-                "Один в поле не воин",
-                "Повторение мать учения",
-                "Семь раз отмерь один раз отрежь",
-                "Слово не воробей вылетит не поймаешь",
-                "Тише едешь дальше будешь",
-                "Ученье свет а неученье тьма",
-                "Что посеешь то и пожнешь",
-                "Язык до Киева доведет"
+                "Москва не сразу строилась"
             ],
             programming: [
                 "функция", "переменная", "цикл", "массив", "объект", "класс", "метод", "параметр", "аргумент", "возврат",
-                "константа", "условие", "оператор", "логический", "стр��ка", "число", "булевый", "истина", "ложь", "тип",
-                "интерфейс", "модуль", "импорт", "экспорт", "библиотека", "фреймворк", "компилятор", "интерпретатор", "синтаксис", "отладка",
-                "тестирование", "рефакторинг", "оптимизация", "алгоритм", "структура", "данные", "база", "запрос", "ответ", "сервер",
-                "клиент", "асинхронный", "промис", "колбэк", "замыкание", "прототип", "наследование", "инкапсуляция", "полиморфизм", "абстракция",
-                "рекурсия", "итерация", "декремент", "инкремент", "конкатенация", "интерполяция", "валидация", "санитизация", "хэширование", "шифрование",
-                "аутентификация", "авторизация", "сессия", "куки", "токен", "мидлвар", "роутер", "редирект", "деплой", "релиз"
+                "константа", "условие", "оператор", "логический", "строка", "число", "булевый", "истина", "ложь", "тип",
+                "интерфейс", "модуль", "импорт", "экспорт", "библиотека", "фреймворк", "компилятор", "интерпретатор", "синтаксис", "отладка"
             ],
             quotes: [
                 "Лучший способ предсказать будущее создать его",
                 "Программирование это искусство создавать решения из ничего",
                 "Код это поэзия логики",
                 "Прежде чем оптимизировать убедитесь что это необходимо",
-                "Сложность убивает она высасывает жизнь из разработчиков",
-                "Лучше сделать потом чем никогда не сделать",
-                "Работает не трогай",
-                "Измеряй дважды режь один раз",
-                "Главное не знать а понимать",
-                "Учись как будто будешь жить вечно"
+                "Сложность убивает она высасывает жизнь из разработчиков"
             ]
         };
 
-        // DOM Elements
         const textDisplay = document.getElementById('textDisplay');
         const typingInput = document.getElementById('typingInput');
         const timerElement = document.getElementById('timer');
@@ -452,9 +435,9 @@
         const accuracyStat = document.getElementById('accuracyStat');
         const correctStat = document.getElementById('correctStat');
         const incorrectStat = document.getElementById('incorrectStat');
+        const missedStat = document.getElementById('missedStat');
         const themeToggle = document.getElementById('themeToggle');
 
-        // Game variables
         let currentDictionary = 'russian';
         let text = '';
         let currentCharacterIndex = 0;
@@ -463,29 +446,28 @@
         let timeLeft = 60;
         let correctCharacters = 0;
         let incorrectCharacters = 0;
+        let missedCharacters = 0;
         let isTyping = false;
+        let characterStates = [];
 
-        // Initialize the game
         function init() {
-            // Reset game state
             currentCharacterIndex = 0;
             timeLeft = 60;
             correctCharacters = 0;
             incorrectCharacters = 0;
+            missedCharacters = 0;
             isTyping = false;
+            characterStates = [];
             
-            // Get text from selected dictionary
             text = getTextFromDictionary(dictionaries[currentDictionary]);
+            characterStates = new Array(text.length).fill(null);
             
-            // Display text
             renderText();
             
-            // Reset UI
             typingInput.value = '';
             typingInput.disabled = false;
             timerElement.textContent = timeLeft;
             
-            // Hide/show elements
             startBtn.classList.remove('hidden');
             timerElement.classList.add('hidden');
             textDisplay.classList.add('hidden');
@@ -493,42 +475,34 @@
             statsArea.classList.add('hidden');
             restartBtn.classList.add('hidden');
             
-            // Clear any existing timer
             if (timer) {
                 clearInterval(timer);
             }
         }
 
-        // Get text from dictionary
         function getTextFromDictionary(dictionary) {
-            // For proverbs and quotes, use them as is
             if (currentDictionary === 'russian_proverbs' || currentDictionary === 'quotes') {
                 return dictionary.join(' ');
             }
             
-            // For word lists, create a random text
             const shuffled = [...dictionary].sort(() => 0.5 - Math.random());
-            const words = shuffled.slice(0, 50);
+            const words = shuffled.slice(0, 30);
             return words.join(' ');
         }
 
-        // Start the typing test
         function startTest() {
             if (isTyping) return;
             
             isTyping = true;
             startTime = new Date().getTime();
             
-            // Show typing area
             timerElement.classList.remove('hidden');
             textDisplay.classList.remove('hidden');
             typingInput.classList.remove('hidden');
             startBtn.classList.add('hidden');
             
-            // Focus input
             typingInput.focus();
             
-            // Start timer
             timer = setInterval(() => {
                 timeLeft--;
                 timerElement.textContent = timeLeft;
@@ -539,18 +513,19 @@
             }, 1000);
         }
 
-        // Render text with character highlighting
         function renderText() {
             let html = '';
             
             for (let i = 0; i < text.length; i++) {
                 let characterClass = '';
                 
-                if (i < currentCharacterIndex) {
-                    // Character is already typed
+                if (characterStates[i] === 'correct') {
                     characterClass = 'correct';
+                } else if (characterStates[i] === 'incorrect') {
+                    characterClass = 'incorrect';
+                } else if (characterStates[i] === 'missed') {
+                    characterClass = 'missed';
                 } else if (i === currentCharacterIndex) {
-                    // Current character
                     characterClass = 'current';
                 }
                 
@@ -559,7 +534,6 @@
             
             textDisplay.innerHTML = html;
             
-            // Auto-scroll to current character on mobile
             const currentCharElement = document.querySelector('.character.current');
             if (currentCharElement) {
                 currentCharElement.scrollIntoView({
@@ -570,29 +544,35 @@
             }
         }
 
-        // End the typing test
         function endTest() {
             clearInterval(timer);
             typingInput.disabled = true;
             isTyping = false;
             
-            // Calculate stats
-            const totalCharacters = correctCharacters + incorrectCharacters;
+            for (let i = currentCharacterIndex; i < text.length; i++) {
+                if (characterStates[i] === null) {
+                    characterStates[i] = 'missed';
+                    missedCharacters++;
+                }
+            }
+            
+            renderText();
+            
+            const totalCharacters = correctCharacters + incorrectCharacters + missedCharacters;
             const minutes = (60 - timeLeft) / 60;
             const wpm = Math.round((correctCharacters / 5) / minutes) || 0;
-            const accuracy = Math.round((correctCharacters / totalCharacters) * 100) || 0;
+            const accuracy = Math.round((correctCharacters / (correctCharacters + incorrectCharacters + missedCharacters)) * 100) || 0;
             
-            // Display stats
             wpmStat.textContent = wpm;
             accuracyStat.textContent = accuracy + '%';
             correctStat.textContent = correctCharacters;
             incorrectStat.textContent = incorrectCharacters;
+            missedStat.textContent = missedCharacters;
             
             statsArea.classList.remove('hidden');
             restartBtn.classList.remove('hidden');
         }
 
-        // Handle typing input
         function handleInput(e) {
             const inputValue = typingInput.value;
             
@@ -600,26 +580,49 @@
             
             const currentChar = text[currentCharacterIndex];
             
-            // Check if current character matches input
             if (inputValue === currentChar) {
+                characterStates[currentCharacterIndex] = 'correct';
                 correctCharacters++;
-                currentCharacterIndex++;
-                typingInput.value = '';
-                
-                // End test if all characters are completed
-                if (currentCharacterIndex === text.length) {
-                    endTest();
-                    return;
-                }
             } else {
+                characterStates[currentCharacterIndex] = 'incorrect';
                 incorrectCharacters++;
-                typingInput.value = '';
+            }
+            
+            currentCharacterIndex++;
+            typingInput.value = '';
+            
+            if (currentCharacterIndex === text.length) {
+                endTest();
+                return;
             }
             
             renderText();
         }
 
-        // Toggle theme
+        function handleKeyDown(e) {
+            if (e.key === ' ' && isTyping) {
+                e.preventDefault();
+                if (characterStates[currentCharacterIndex] === null) {
+                    characterStates[currentCharacterIndex] = 'missed';
+                    missedCharacters++;
+                }
+                currentCharacterIndex++;
+                typingInput.value = '';
+                
+                if (currentCharacterIndex === text.length) {
+                    endTest();
+                    return;
+                }
+                
+                renderText();
+            }
+            
+            if (e.key === 'Tab') {
+                e.preventDefault();
+                init();
+            }
+        }
+
         function toggleTheme() {
             const currentTheme = document.documentElement.getAttribute('data-theme');
             if (currentTheme === 'dark') {
@@ -633,7 +636,6 @@
             }
         }
 
-        // Check for saved theme preference
         function checkSavedTheme() {
             const savedTheme = localStorage.getItem('theme');
             if (savedTheme === 'dark') {
@@ -644,8 +646,8 @@
             }
         }
 
-        // Event listeners
         typingInput.addEventListener('input', handleInput);
+        document.addEventListener('keydown', handleKeyDown);
         
         dictionaryBtns.forEach(btn => {
             btn.addEventListener('click', () => {
@@ -660,7 +662,6 @@
         restartBtn.addEventListener('click', init);
         themeToggle.addEventListener('click', toggleTheme);
 
-        // Initialize on load
         checkSavedTheme();
         init();
     </script>
